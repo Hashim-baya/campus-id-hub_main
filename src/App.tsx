@@ -2,11 +2,29 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/lib/auth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import AppLayout from "@/components/AppLayout";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
+import Application from "./pages/Application";
+import VirtualID from "./pages/VirtualID";
+import LostID from "./pages/LostID";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import Verification from "./pages/admin/Verification";
+import Management from "./pages/admin/Management";
+import Verify from "./pages/Verify";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+function AuthRedirect() {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  if (user) return <Navigate to="/dashboard" replace />;
+  return <Auth />;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -14,11 +32,28 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/auth" element={<AuthRedirect />} />
+            <Route path="/verify/:id" element={<Verify />} />
+            
+            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/application" element={<Application />} />
+              <Route path="/virtual-id" element={<VirtualID />} />
+              <Route path="/lost-id" element={<LostID />} />
+            </Route>
+
+            <Route element={<ProtectedRoute adminOnly><AppLayout /></ProtectedRoute>}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/verification" element={<Verification />} />
+              <Route path="/admin/management" element={<Management />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
