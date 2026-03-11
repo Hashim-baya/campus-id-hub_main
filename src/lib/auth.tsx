@@ -70,6 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       setIsAdminApproved(false);
     }
+    setRoleLoaded(true);
+  };
 
   const refreshProfile = async () => {
     if (user) {
