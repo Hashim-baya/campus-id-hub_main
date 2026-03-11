@@ -199,6 +199,7 @@ export default function StudentAuthForm() {
               </button>
             </div>
           </div>
+          {!isLogin && <PasswordStrengthIndicator password={password} />}
           <Button type="submit" className="w-full gap-2" disabled={loading}>
             {loading ? (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
