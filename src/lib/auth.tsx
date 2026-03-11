@@ -118,11 +118,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(null);
     setIsAdmin(false);
     setIsSuperAdmin(false);
+    setIsAdminApproved(false);
     setRoleLoaded(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, isSuperAdmin, profile, signOut, refreshProfile, roleLoaded }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, isSuperAdmin, isAdminApproved, profile, signOut, refreshProfile, roleLoaded }}>
       {children}
     </AuthContext.Provider>
   );
