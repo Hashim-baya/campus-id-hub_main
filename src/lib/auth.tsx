@@ -91,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setProfile(null);
           setIsAdmin(false);
           setIsSuperAdmin(false);
+          setIsAdminApproved(false);
           setRoleLoaded(true);
         }
         setLoading(false);
